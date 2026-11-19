@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:material_ui/material_ui.dart' as mui;
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'screens/login_screen.dart';
 import 'screens/register_screen.dart';
@@ -23,13 +22,21 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     final session = Supabase.instance.client.auth.currentSession;
 
-    return mui.MaterialApp(
+    return MaterialApp(
       title: 'TaskFlow - Gerenciador de Tarefas',
       debugShowCheckedModeBanner: false,
-      theme: mui.ThemeData(
-        colorScheme: mui.ColorScheme.fromSeed(seedColor: mui.Colors.indigo),
+      theme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.indigo),
         useMaterial3: true,
       ),
+      localizationsDelegates: const [
+        DefaultMaterialLocalizations.delegate,
+        DefaultWidgetsLocalizations.delegate,
+      ],
+      supportedLocales: const [
+        Locale('pt', 'BR'),
+        Locale('en', 'US'),
+      ],
       initialRoute: session != null ? '/home' : '/login',
       routes: {
         '/login': (context) => const LoginScreen(),
