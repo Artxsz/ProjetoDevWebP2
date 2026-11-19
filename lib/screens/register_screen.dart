@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../services/auth_service.dart';
@@ -65,10 +65,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     } on AuthException catch (error) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(error.message),
-            backgroundColor: Colors.red,
-          ),
+          SnackBar(content: Text(error.message), backgroundColor: Colors.red),
         );
       }
     } catch (error) {

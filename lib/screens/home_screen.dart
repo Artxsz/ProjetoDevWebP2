@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 import '../models/task_model.dart';
 import '../services/auth_service.dart';
@@ -94,8 +94,9 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Future<void> _showTaskDialog({TaskModel? task}) async {
     final titleController = TextEditingController(text: task?.title ?? '');
-    final descriptionController =
-        TextEditingController(text: task?.description ?? '');
+    final descriptionController = TextEditingController(
+      text: task?.description ?? '',
+    );
 
     final saved = await showDialog<bool>(
       context: context,
@@ -207,21 +208,19 @@ class _HomeScreenState extends State<HomeScreen> {
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
           : _tasks.isEmpty
-              ? const Center(
-                  child: Text('Você ainda não tem tarefas.'),
-                )
-              : ListView.builder(
-                  itemCount: _tasks.length,
-                  itemBuilder: (context, index) {
-                    final task = _tasks[index];
-                    return TaskTile(
-                      task: task,
-                      onToggle: (isDone) => _toggleTask(task, isDone),
-                      onEdit: () => _showTaskDialog(task: task),
-                      onDelete: () => _deleteTask(task),
-                    );
-                  },
-                ),
+          ? const Center(child: Text('Você ainda não tem tarefas.'))
+          : ListView.builder(
+              itemCount: _tasks.length,
+              itemBuilder: (context, index) {
+                final task = _tasks[index];
+                return TaskTile(
+                  task: task,
+                  onToggle: (isDone) => _toggleTask(task, isDone),
+                  onEdit: () => _showTaskDialog(task: task),
+                  onDelete: () => _deleteTask(task),
+                );
+              },
+            ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () => _showTaskDialog(),
         icon: const Icon(Icons.add),

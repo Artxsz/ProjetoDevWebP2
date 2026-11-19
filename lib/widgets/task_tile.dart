@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 import '../models/task_model.dart';
 
@@ -21,19 +21,16 @@ class TaskTile extends StatelessWidget {
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
       child: ListTile(
-        leading: Checkbox(
-          value: task.isDone,
-          onChanged: onToggle,
-        ),
+        leading: Checkbox(value: task.isDone, onChanged: onToggle),
         title: Text(
           task.title,
           style: TextStyle(
-            decoration:
-                task.isDone ? TextDecoration.lineThrough : TextDecoration.none,
+            decoration: task.isDone
+                ? TextDecoration.lineThrough
+                : TextDecoration.none,
           ),
         ),
-        subtitle:
-            task.description.isNotEmpty ? Text(task.description) : null,
+        subtitle: task.description.isNotEmpty ? Text(task.description) : null,
         trailing: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
