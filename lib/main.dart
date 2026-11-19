@@ -29,6 +29,16 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.indigo),
         useMaterial3: true,
       ),
+      builder: (context, child) {
+        return Localizations(
+          locale: const Locale('en', 'US'),
+          delegates: const [
+            DefaultMaterialLocalizations.delegate,
+            DefaultWidgetsLocalizations.delegate,
+          ],
+          child: child ?? const SizedBox.shrink(),
+        );
+      },
       initialRoute: session != null ? '/home' : '/login',
       routes: {
         '/login': (context) => const LoginScreen(),
