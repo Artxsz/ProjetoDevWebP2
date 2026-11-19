@@ -15,6 +15,23 @@ Future<void> main() async {
   runApp(const MyApp());
 }
 
+class _LocalizationGuard extends StatelessWidget {
+  final Widget child;
+  const _LocalizationGuard({required this.child});
+
+  @override
+  Widget build(BuildContext context) {
+    return Localizations(
+      locale: const Locale('en', 'US'),
+      delegates: const [
+        DefaultMaterialLocalizations.delegate,
+        DefaultWidgetsLocalizations.delegate,
+      ],
+      child: child,
+    );
+  }
+}
+
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
@@ -29,19 +46,11 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.indigo),
         useMaterial3: true,
       ),
-      localizationsDelegates: const [
-        DefaultMaterialLocalizations.delegate,
-        DefaultWidgetsLocalizations.delegate,
-      ],
-      supportedLocales: const [
-        Locale('pt', 'BR'),
-        Locale('en', 'US'),
-      ],
       initialRoute: session != null ? '/home' : '/login',
       routes: {
-        '/login': (context) => const LoginScreen(),
-        '/register': (context) => const RegisterScreen(),
-        '/home': (context) => const HomeScreen(),
+        '/login': (context) => const _LocalizationGuard(child: LoginScreen()),
+        '/register': (context) => const _LocalizationGuard(child: RegisterScreen()),
+        '/home': (context) => const _LocalizationGuard(child: HomeScreen()),
       },
     );
   }

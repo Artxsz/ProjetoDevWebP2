@@ -1,30 +1,37 @@
 import 'package:supabase_flutter/supabase_flutter.dart';
-
 import '../models/task_model.dart';
 
 class DatabaseService {
-  final SupabaseClient _supabase = Supabase.instance.client;
+  final SupabaseClient _client = Supabase.instance.client;
 
   Future<List<TaskModel>> getTasks() async {
-    final userId = _supabase.auth.currentUser?.id;
-    if (userId == null) {
-      return [];
-    }
+    final userId = _client.auth.currentUser?.id;
+    if (userId == null) return [];
 
-    final response = await _supabase
+    final response = await _client
         .from('tasks')
         .select()
         .eq('user_id', userId)
         .order('created_at', ascending: false);
 
-    return response.map((task) => TaskModel.fromMap(task)).toList();
+    return (response as List<dynamic>)
+        .map((item) => TaskModel.fromMap(item as Map<String, dynamic>))
+        .toList();
   }
 
-  Future<void> createTask(String title, String description) async {
-    await _supabase.from('tasks').insert({
-      'user_id': _supabase.auth.currentUser!.id,
+  Future<void> createTask(
+    String title,
+    String description,
+    int durationMinutes,
+  ) async {
+    final userId = _client.auth.currentUser?.id;
+    if (userId == null) throw Exception('Usuário não autenticado');
+
+    await _client.from('tasks').insert({
+      'user_id': userId,
       'title': title.trim(),
       'description': description.trim(),
+      'duration_minutes': durationMinutes,
       'is_done': false,
     });
   }
@@ -33,16 +40,21 @@ class DatabaseService {
     TaskModel task, {
     String? title,
     String? description,
+    int? durationMinutes,
     bool? isDone,
   }) async {
-    await _supabase.from('tasks').update({
-      'title': title ?? task.title,
-      'description': description ?? task.description,
-      'is_done': isDone ?? task.isDone,
-    }).eq('id', task.id);
+    final updates = <String, dynamic>{};
+    if (title != null) updates['title'] = title.trim();
+    if (description != null) updates['description'] = description.trim();
+    if (durationMinutes != null) updates['duration_minutes'] = durationMinutes;
+    if (isDone != null) updates['is_done'] = isDone;
+
+    if (updates.isEmpty) return;
+
+    await _client.from('tasks').update(updates).eq('id', task.id);
   }
 
   Future<void> deleteTask(String id) async {
-    await _supabase.from('tasks').delete().eq('id', id);
+    await _client.from('tasks').delete().eq('id', id);
   }
 }
